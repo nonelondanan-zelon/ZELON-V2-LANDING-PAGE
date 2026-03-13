@@ -111,9 +111,99 @@
     .footer-cta h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; color: #fff; letter-spacing: -1px; }
     .footer-cta p { margin-top: 14px; font-size: 1.05rem; color: #555; }
     .footer-note { margin-top: 60px; font-size: 0.8rem; color: #333; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.85); backdrop-filter: blur(4px);
+      z-index: 100; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #111; border: 1px solid #222; border-radius: 20px;
+      padding: 48px 40px; width: 100%; max-width: 480px; margin: 20px;
+      position: relative;
+    }
+    .modal h3 { font-size: 1.5rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    .modal p { font-size: 0.9rem; color: #555; margin-top: 6px; }
+    .modal-close {
+      position: absolute; top: 16px; right: 20px;
+      background: none; border: none; color: #444; font-size: 1.4rem;
+      cursor: pointer; line-height: 1;
+    }
+    .modal-close:hover { color: #aaa; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-top: 24px; }
+    .field label { font-size: 0.82rem; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .field input, .field select {
+      background: #0a0a0a; border: 1px solid #222; border-radius: 10px;
+      color: #e8e8e8; font-size: 1rem; padding: 12px 16px;
+      outline: none; transition: border-color .2s;
+      appearance: none; -webkit-appearance: none;
+    }
+    .field input:focus, .field select:focus { border-color: #00ff9d; }
+    .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+    .btn-submit {
+      margin-top: 28px; width: 100%;
+      background: #00ff9d; color: #0a0a0a;
+      font-size: 1.05rem; font-weight: 700;
+      padding: 16px; border-radius: 50px; border: none;
+      cursor: pointer; transition: opacity .2s, transform .15s;
+    }
+    .btn-submit:hover { opacity: .88; transform: translateY(-1px); }
+    .success-msg { display: none; text-align: center; padding: 20px 0; }
+    .success-msg .check { font-size: 3rem; }
+    .success-msg h4 { font-size: 1.3rem; font-weight: 700; color: #fff; margin-top: 12px; }
+    .success-msg p { font-size: 0.9rem; color: #555; margin-top: 8px; }
   </style>
 </head>
 <body>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modal-form">
+        <h3>You're almost in 🚀</h3>
+        <p>Just 3 quick things so we can personalise your experience.</p>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="f-email" placeholder="you@example.com" />
+        </div>
+        <div class="field">
+          <label>Business Industry</label>
+          <select id="f-industry">
+            <option value="" disabled selected>Select your industry</option>
+            <option>Coaching / Consulting</option>
+            <option>Freelancing / Agency</option>
+            <option>E-commerce / Retail</option>
+            <option>SaaS / Tech</option>
+            <option>Content / Creator</option>
+            <option>Real Estate</option>
+            <option>Health & Wellness</option>
+            <option>Finance / Accounting</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Years in Business</label>
+          <select id="f-years">
+            <option value="" disabled selected>Select range</option>
+            <option>Less than 1 year</option>
+            <option>1–2 years</option>
+            <option>3–5 years</option>
+            <option>6–10 years</option>
+            <option>10+ years</option>
+          </select>
+        </div>
+        <button class="btn-submit" onclick="submitForm()">Start My Revenue Engine →</button>
+      </div>
+      <div class="success-msg" id="success-msg">
+        <div class="check">✅</div>
+        <h4>You're in!</h4>
+        <p>We'll be in touch soon. Get ready to execute.</p>
+      </div>
+    </div>
+  </div>
 
   <nav>
     <div class="logo">Zelon</div>
@@ -124,7 +214,7 @@
     <h1>Stop Guessing.<br><span>HIT Your Revenue Goal.</span></h1>
     <p>Know exactly how to fix and achieve your revenue goal in just 5-8 minutes using our Proven Software</p>
     <div class="cta-wrap">
-      <a href="#footer-cta" class="btn-cta" onclick="alert('Joined waitlist')">Sign up (Free for First 50)</a>
+      <a href="#footer-cta" class="btn-cta" onclick="openModal();return false;">Sign up (Free for First 50)</a>
       <div class="social-proof">No card. Just your email. &nbsp;<strong>1,248 entrepreneurs already in.</strong></div>
     </div>
   </section>
@@ -169,12 +259,34 @@
     <h2>Sign up → <span style="color:#00ff9d">Start Your Revenue Engine</span></h2>
     <p>Built for entrepreneurs who are done consuming and ready to execute.</p>
     <div class="cta-wrap" style="margin-top:36px">
-      <a href="#" class="btn-cta" onclick="alert('Joined waitlist')">Sign up (Free for First 50)</a>
+      <a href="#" class="btn-cta" onclick="openModal();return false;">Sign up (Free for First 50)</a>
       <div class="social-proof">No credit card. Unsubscribe any time.</div>
     </div>
     <div class="footer-note">© 2026 Zelon · Built for people who execute.</div>
   </section>
 
+  <script>
+    function openModal() {
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+      document.getElementById('modal-form').style.display = 'block';
+      document.getElementById('success-msg').style.display = 'none';
+    }
+    function submitForm() {
+      var email = document.getElementById('f-email').value.trim();
+      var industry = document.getElementById('f-industry').value;
+      var years = document.getElementById('f-years').value;
+      if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
+      if (!industry) { alert('Please select your industry.'); return; }
+      if (!years) { alert('Please select years in business.'); return; }
+      document.getElementById('modal-form').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    }
+  </script>
 </body>
 </html>
 <!-- Ready to deploy -->
